@@ -6,11 +6,16 @@
 ## cache its inverse.
 
 makeCacheMatrix <- function(x = matrix()) {
+  # Initialize inv to NULL to indicate it hasn't yet been evaluated
   inv <- NULL
   
   # set the value of the matrix
   set <- function(y) {
+    # Note use of "super assignment" operator <<- to define value in parent
+    # environment
     x <<- y
+    # Set inv back to NULL because it hasn't yet been evaluated for this new
+    # matrix
     inv <<- NULL
   }
   
@@ -37,12 +42,18 @@ makeCacheMatrix <- function(x = matrix()) {
 cacheSolve <- function(x, ...) {
   ## Return a matrix that is the inverse of 'x'
   inv <- x$getinverse()
+  # Check if result has already been cached
   if(!is.null(inv)) {
-    message("getting cached data")
+    # message("getting cached data")
+    # Uncomment the message() command above to confirm use of cached result
     return(inv)
   }
+  # If result has not been cached, retrieve the matrix..
   data <- x$get()
+  # ...and call solve() on the matrix to compute the inverse
   inv <- solve(data, ...)
+  # Cache the inverse for future reference
   x$setinverse(inv)
+  # Return the inverse
   inv
 }
